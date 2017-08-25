@@ -60,6 +60,7 @@ def message_display(text):
 def crash():
     message_display('You Crashed')
 
+
 def button(msg, x, y, w, h, ic, ac, action=None):
     mouse = pygame.mouse.get_pos()
     click = pygame.mouse.get_pressed()
@@ -78,24 +79,31 @@ def button(msg, x, y, w, h, ic, ac, action=None):
     textRect.center = ((x + (w / 2)), (y + (h / 2)))
     gameDisplay.blit(textSurf, textRect)
 
+
+def unpaused():
+    global pause
+    pause = False
+
+
 def paused():
-
-    largeText = pygame.font.Font('freesansbold.ttf', 115)
-    TextSurf, TextRect = text_objects("Paused", largeText)
-    TextRect.center = ((display_width / 2), (display_height / 2))
-    gameDisplay.blit(TextSurf, TextRect)
-
     while pause:
-
         for event in pygame.event.get():
+            # print(event)
             if event.type == pygame.QUIT:
                 quitgame()
 
-        button("GO!", 150, 450, 100, 50, green, bright_green, game_loop)
+        gameDisplay.fill(white)
+        largeText = pygame.font.Font('freesansbold.ttf', 115)
+        TextSurf, TextRect = text_objects("Paused", largeText)
+        TextRect.center = ((display_width / 2), (display_height / 2))
+        gameDisplay.blit(TextSurf, TextRect)
+
+        button("Continue", 150, 450, 100, 50, green, bright_green, unpaused)
         button("Quit", 550, 450, 100, 50, red, bright_red, quitgame)
 
         pygame.display.update()
         clock.tick(15)
+
 
 def game_intro():
     intro = True
@@ -124,8 +132,8 @@ def quitgame():
     quit()
 
 
-
 def game_loop():
+    global pause
     x = (display_width * 0.45)
     y = (display_height * 0.8)
 
@@ -151,10 +159,10 @@ def game_loop():
                 if event.key == pygame.K_LEFT:
                     x_change = -5
                     print("left---------")
-                elif event.key == pygame.K_RIGHT:
+                if event.key == pygame.K_RIGHT:
                     x_change = 5
                     print("right--------")
-                elif event.key == pygame.K_p:
+                if event.key == pygame.K_p:
                     pause = True
                     paused()
 
