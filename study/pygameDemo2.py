@@ -19,6 +19,7 @@ block_color = (53, 115, 255)
 
 car_width = 73
 
+crash_sound = pygame.mixer.Sound("crash.wav")
 pause = False
 # crash = True
 
@@ -27,6 +28,7 @@ pygame.display.set_caption('A bit Racey')
 clock = pygame.time.Clock()
 
 carImg = pygame.image.load('racecar.png')
+pygame.display.set_icon(carImg)
 
 
 def things_dodged(count):
@@ -60,8 +62,11 @@ def message_display(text):
 
 def crash():
 
+    pygame.mixer.Sound.play(crash_sound)
+    pygame.mixer.music.stop()
+
     largeText = pygame.font.Font('freesansbold.ttf', 115)
-    TextSurf, TextRect = text_objects("Paused", largeText)
+    TextSurf, TextRect = text_objects("You Crashed", largeText)
     TextRect.center = ((display_width / 2), (display_height / 2))
     gameDisplay.blit(TextSurf, TextRect)
 
@@ -83,7 +88,7 @@ def crash():
 def button(msg, x, y, w, h, ic, ac, action=None):
     mouse = pygame.mouse.get_pos()
     click = pygame.mouse.get_pressed()
-    print(click)
+    # print(click)
 
     if x + w > mouse[0] > x and y + h > mouse[1] > y:
         pygame.draw.rect(gameDisplay, ac, (x, y, w, h))
@@ -101,10 +106,13 @@ def button(msg, x, y, w, h, ic, ac, action=None):
 
 def unpaused():
     global pause
+    pygame.mixer.music.unpause()
     pause = False
 
 
 def paused():
+
+    pygame.mixer.music.pause()
 
     largeText = pygame.font.Font('freesansbold.ttf', 115)
     TextSurf, TextRect = text_objects("Paused", largeText)
@@ -153,7 +161,12 @@ def quitgame():
 
 
 def game_loop():
+
     global pause
+
+    pygame.mixer.music.load('jazz.wav')
+    pygame.mixer.music.play(-1)
+
     x = (display_width * 0.45)
     y = (display_height * 0.8)
 
